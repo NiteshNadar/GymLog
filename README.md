@@ -11,7 +11,7 @@ A modern, full-stack workout tracking SaaS application. Track your lifts — not
 | Database  | MongoDB Atlas                                                      |
 | Auth      | JWT (access + refresh tokens in httpOnly cookies)                  |
 | Monitoring| Sentry                                                             |
-| Deploy    | Netlify (frontend) · Render (backend)                              |
+| Deploy    | Vercel (frontend) · Render (backend)                               |
 
 ## Project Structure
 
@@ -95,13 +95,13 @@ npm run dev                # Starts on http://localhost:5173
 6. Add all env vars from the table above
 7. Set `NODE_ENV=production`
 
-### Frontend → [Netlify](https://www.netlify.com)
+### Frontend → [Vercel](https://vercel.com)
 
-1. Connect your GitHub repo on Netlify
-2. Set **Base directory** to `frontend`
-3. **Build command**: `npm install && npm run build`
-4. **Publish directory**: `frontend/dist`
-5. Add env vars: `VITE_API_BASE_URL` = your Render backend URL
+1. Import your GitHub repo on [vercel.com/new](https://vercel.com/new)
+2. Set **Root Directory** to `frontend`
+3. Vercel auto-detects Vite — no build config needed
+4. Add env var: `VITE_API_BASE_URL` = your Render backend URL
+5. Deploy!
 
 ## Available Scripts
 
