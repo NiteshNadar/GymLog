@@ -4,7 +4,6 @@ import helmet from 'helmet';
 import { sanitize } from 'express-mongo-sanitize';
 import * as Sentry from '@sentry/node';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
-import rateLimit from 'express-rate-limit';
 import { logger } from './utils/logger.js';
 import cookieParser from 'cookie-parser';
 
@@ -108,32 +107,7 @@ function mongooseConnectionReadyState() {
   return mongoose.connection.readyState === 1;
 }
 
-// 9. Global rate limit
-const globalLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 100, // 100 requests per minute
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    error: { code: 'RATE_LIMIT_EXCEEDED', message: 'Too many requests, please try again later.' },
-  },
-});
-app.use('/api', globalLimiter);
-
-// 10. Strict auth-route rate limit
-const authLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 15, // 15 requests per minute
-  skipSuccessfulRequests: false,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    error: { code: 'RATE_LIMIT_EXCEEDED', message: 'Too many authentication attempts. Please wait.' },
-  },
-});
-app.use('/api/v1/auth', authLimiter);
+// 9. Rate limiting is handled at the edge by Vercel
 
 // 11. Route mounts
 app.use('/api/v1/auth', authRouter);

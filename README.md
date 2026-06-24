@@ -11,7 +11,7 @@ A modern, full-stack workout tracking SaaS application. Track your lifts — not
 | Database  | MongoDB Atlas                                                      |
 | Auth      | JWT (access + refresh tokens in httpOnly cookies)                  |
 | Monitoring| Sentry                                                             |
-| Deploy    | Vercel (frontend) · Railway (backend)                              |
+| Deploy    | Vercel (Frontend SPA + Serverless Backend)                         |
 
 ## Project Structure
 
@@ -83,24 +83,17 @@ npm run dev                # Starts on http://localhost:5173
 | `VITE_API_BASE_URL`    | ✅       | Backend API URL                   |
 | `VITE_GOOGLE_CLIENT_ID`| ❌       | Google OAuth client ID            |
 
-## Deployment
-
-### Backend → [Railway](https://railway.app)
-
-1. Create a **New Project** on Railway
-2. Choose **Deploy from GitHub repo**
-3. Set **Root Directory** to `/backend` in the project settings (or let Railway auto-detect)
-4. Railway will automatically detect Node.js and build the project using `npm run build` and start it using `npm start`
-5. Go to the Variables tab and add all env vars from the table above
-6. Generate a Public Domain for your service in the Settings tab
-
-### Frontend → [Vercel](https://vercel.com)
+### Unified Deployment → [Vercel](https://vercel.com)
 
 1. Import your GitHub repo on [vercel.com/new](https://vercel.com/new)
-2. Set **Root Directory** to `frontend`
-3. Vercel auto-detects Vite — no build config needed
-4. Add env var: `VITE_API_BASE_URL` = your Railway backend URL
-5. Deploy!
+2. Leave **Root Directory** as `/`
+3. Expand **Build and Output Settings**:
+   - **Build Command**: `cd frontend && npm install && npm run build`
+   - **Output Directory**: `frontend/dist`
+   - **Install Command**: `npm install && cd backend && npm install`
+4. Add all environment variables from both the frontend and backend tables above.
+   - For `VITE_API_BASE_URL`, set it to `/api` (this avoids CORS issues completely).
+5. Deploy! Vercel will build the React frontend and automatically deploy the Express backend as Serverless Functions via `api/index.ts`.
 
 ## Available Scripts
 
