@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 10px;
+  }
+
+  .dark {
+    /* Deep Violet/Obsidian base with piercing Neon Yellow-Green accent */
+    --background: 0.10 0.02 280;
+    --foreground: 0.95 0.01 280;
+
+    --surface: 0.14 0.02 280;
+    --surface-raised: 0.18 0.02 280;
+
+    --text-primary: 0.95 0.01 280;
+    --text-secondary: 0.60 0.02 280;
+
+    --border: 0.22 0.02 280;
+    --input: 0.16 0.02 280;
+    --ring: 0.88 0.2 135;
+
+    --accent: 0.88 0.2 135; /* Electric Neon */
+    --accent-foreground: 0.10 0.02 280;
+
+    --danger: 0.65 0.25 25;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    background-color: oklch(var(--background));
+    color: oklch(var(--foreground));
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100dvh;
+  }
+
+  input:focus::placeholder {
+    color: transparent;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  #root {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Tabular numbers for data alignment */
+.nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Completion pulse — Overdrive edition */
+@keyframes logged-pulse {
+  0% { 
+    box-shadow: 0 0 0 0 oklch(var(--accent) / 0.8), 0 0 20px 5px oklch(var(--accent) / 0.6); 
+    transform: scale(1);
+    filter: brightness(1.2);
+  }
+  20% {
+    transform: scale(1.03);
+  }
+  100% { 
+    box-shadow: 0 0 0 15px oklch(var(--accent) / 0), 0 0 0 0 oklch(var(--accent) / 0); 
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+.logged-pulse {
+  animation: logged-pulse 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Checkmark flash for log confirmation */
+@keyframes check-appear {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.check-appear {
+  animation: check-appear 0.3s ease-out forwards;
+}
+
+/* Custom Scrollbar — minimal */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(var(--border));
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(var(--text-secondary));
+}
+
+/* Pulse animation for active recording sessions */
+@keyframes recording-pulse {
+  0% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.15); }
+  100% { opacity: 0.4; transform: scale(0.9); }
+}
+.recording-pulse {
+  animation: recording-pulse 1.8s infinite ease-in-out;
+}
+
+/* Cybernetic HUD border and shadows */
+.hud-panel {
+  border-top: 1px dashed oklch(var(--border));
+  background: linear-gradient(180deg, oklch(var(--surface) / 0.1) 0%, oklch(var(--surface) / 0.5) 100%);
+}
+
+.text-glow {
+  text-shadow: 0 0 10px oklch(var(--accent) / 0.5);
+}
+
+.auth-grid-bg {
+  background-image: 
+    linear-gradient(to right, oklch(var(--border) / 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(var(--border) / 0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
