@@ -1,13 +1,15 @@
 {
-  "version": 2,
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.ts"
+  "experimentalServices": {
+    "frontend": {
+      "root": "frontend",
+      "routePrefix": "/",
+      "framework": "vite"
     },
-    {
-      "source": "/(.*)",
-      "destination": "/frontend/dist/index.html"
+    "backend": {
+      "root": "backend",
+      "routePrefix": "/api",
+      "builder": "@vercel/node",
+      "entrypoint": "api/index.ts"
     }
-  ]
+  }
 }
