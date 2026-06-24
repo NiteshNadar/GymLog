@@ -11,7 +11,7 @@ A modern, full-stack workout tracking SaaS application. Track your lifts — not
 | Database  | MongoDB Atlas                                                      |
 | Auth      | JWT (access + refresh tokens in httpOnly cookies)                  |
 | Monitoring| Sentry                                                             |
-| Deploy    | Vercel (frontend) · Render (backend)                               |
+| Deploy    | Vercel (frontend) · Railway (backend)                              |
 
 ## Project Structure
 
@@ -85,22 +85,21 @@ npm run dev                # Starts on http://localhost:5173
 
 ## Deployment
 
-### Backend → [Render](https://render.com)
+### Backend → [Railway](https://railway.app)
 
-1. Create a **Web Service** on Render
-2. Connect your GitHub repo
-3. Set **Root Directory** to `backend`
-4. **Build Command**: `npm install && npm run build`
-5. **Start Command**: `npm start`
-6. Add all env vars from the table above
-7. Set `NODE_ENV=production`
+1. Create a **New Project** on Railway
+2. Choose **Deploy from GitHub repo**
+3. Set **Root Directory** to `/backend` in the project settings (or let Railway auto-detect)
+4. Railway will automatically detect Node.js and build the project using `npm run build` and start it using `npm start`
+5. Go to the Variables tab and add all env vars from the table above
+6. Generate a Public Domain for your service in the Settings tab
 
 ### Frontend → [Vercel](https://vercel.com)
 
 1. Import your GitHub repo on [vercel.com/new](https://vercel.com/new)
 2. Set **Root Directory** to `frontend`
 3. Vercel auto-detects Vite — no build config needed
-4. Add env var: `VITE_API_BASE_URL` = your Render backend URL
+4. Add env var: `VITE_API_BASE_URL` = your Railway backend URL
 5. Deploy!
 
 ## Available Scripts
