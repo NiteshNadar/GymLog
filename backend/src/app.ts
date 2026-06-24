@@ -110,10 +110,15 @@ function mongooseConnectionReadyState() {
 // 9. Rate limiting is handled at the edge by Vercel
 
 // 11. Route mounts
-app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/workouts', workoutRouter);
-app.use('/api/v1/exercises', exerciseRouter);
+const apiRouter = express.Router();
+apiRouter.use('/v1/auth', authRouter);
+apiRouter.use('/v1/users', userRouter);
+apiRouter.use('/v1/workouts', workoutRouter);
+apiRouter.use('/v1/exercises', exerciseRouter);
+
+// Mount on both /api and / to ensure it works whether Vercel strips the /api prefix or not
+app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 // 12. Fallback route
 app.use((_req, res) => {
