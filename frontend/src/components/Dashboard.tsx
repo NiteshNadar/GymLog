@@ -134,17 +134,29 @@ export function Dashboard({ onStartWorkout, onViewWorkout, onViewHistory }: Dash
                   <span className="w-0.5 h-5 bg-accent animate-pulse ml-0.5" />
                 </div>
               </div>
-              <Button 
-                type="button" 
-                variant="secondary"
-                className="w-full"
-                onClick={() => {
-                  setIsCreating(false);
-                  setNewWorkoutName('');
-                }}
-              >
-                Cancel
-              </Button>
+              <div className="flex gap-3">
+                <Button 
+                  type="button" 
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => {
+                    setIsCreating(false);
+                    setNewWorkoutName('');
+                  }}
+                >
+                  Cancel
+                </Button>
+                {!isMobile && (
+                  <Button 
+                    type="button"
+                    className="flex-1"
+                    onClick={handleCreateWorkoutClick}
+                    disabled={!newWorkoutName.trim() || createWorkoutMutation.isPending}
+                  >
+                    Start
+                  </Button>
+                )}
+              </div>
             </div>
           )}
         </div>

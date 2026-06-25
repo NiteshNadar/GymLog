@@ -332,6 +332,23 @@ export function ActiveSession({ userId, workout, onFinish }: ActiveSessionProps)
             </div>
           </div>
           
+          {/* PC Navigation Button */}
+          {!isMobile && activeField && (
+            <div className="mt-4 flex justify-end">
+              <Button 
+                onClick={handleNext}
+                disabled={
+                  (activeField === 'name' && !name.trim()) ||
+                  (activeField === 'weight' && !weight) || 
+                  (activeField === 'reps' && !reps) || 
+                  (activeField === 'sets' && (!sets || createExerciseMutation.isPending))
+                }
+              >
+                {activeField === 'sets' ? 'Save Set' : 'Next'}
+              </Button>
+            </div>
+          )}
+          
           {showSuccess && (
             <div className="h-10 flex items-center justify-center text-accent text-[13px] font-medium animate-in fade-in zoom-in duration-200">
               <Check size={16} className="mr-1.5" /> Set logged
