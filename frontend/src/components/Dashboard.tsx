@@ -21,28 +21,6 @@ export function Dashboard({ onStartWorkout, onViewWorkout, onViewHistory }: Dash
   const [isCreating, setIsCreating] = useState(false);
   const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
-  // Handle physical keyboard input for desktop users
-  useEffect(() => {
-    if (!isCreating) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-
-      if (e.key === 'Backspace') {
-        setNewWorkoutName(prev => prev.slice(0, -1));
-      } else if (e.key === 'Enter') {
-        if (newWorkoutName.trim() && !createWorkoutMutation.isPending) {
-          handleCreateWorkoutClick();
-        }
-      } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        setNewWorkoutName(prev => prev + e.key);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isCreating, newWorkoutName, createWorkoutMutation.isPending]);
-
   const { data: workoutsData, isLoading: loading } = useWorkouts({ limit: 5 });
   const createWorkoutMutation = useCreateWorkout();
 
@@ -78,6 +56,28 @@ export function Dashboard({ onStartWorkout, onViewWorkout, onViewHistory }: Dash
       console.error('Error creating workout:', error);
     }
   };
+
+  // Handle physical keyboard input for desktop users
+  useEffect(() => {
+    if (!isCreating) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      if (e.key === 'Backspace') {
+        setNewWorkoutName(prev => prev.slice(0, -1));
+      } else if (e.key === 'Enter') {
+        if (newWorkoutName.trim() && !createWorkoutMutation.isPending) {
+          handleCreateWorkoutClick();
+        }
+      } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        setNewWorkoutName(prev => prev + e.key);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isCreating, newWorkoutName, createWorkoutMutation.isPending]);
 
   return (
     <div className="flex flex-col flex-1 min-h-0 bg-background">
