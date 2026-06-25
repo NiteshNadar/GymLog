@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Workout } from '../types.js';
 import { ChevronRight, Plus, Clock, LogOut, Activity } from 'lucide-react';
 import { format, isThisWeek } from 'date-fns';
@@ -19,6 +19,29 @@ export function Dashboard({ onStartWorkout, onViewWorkout, onViewHistory }: Dash
   const { signOut } = useAuth();
   const [newWorkoutName, setNewWorkoutName] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
+  // Handle physical keyboard input for desktop users
+  useEffect(() => {
+    if (!isCreating) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      if (e.key === 'Backspace') {
+        setNewWorkoutName(prev => prev.slice(0, -1));
+      } else if (e.key === 'Enter') {
+        if (newWorkoutName.trim() && !createWorkoutMutation.isPending) {
+          handleCreateWorkoutClick();
+        }
+      } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        setNewWorkoutName(prev => prev + e.key);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isCreating, newWorkoutName, createWorkoutMutation.isPending]);
 
   const { data: workoutsData, isLoading: loading } = useWorkouts({ limit: 5 });
   const createWorkoutMutation = useCreateWorkout();
@@ -44,7 +67,7 @@ export function Dashboard({ onStartWorkout, onViewWorkout, onViewHistory }: Dash
   }, [workoutsData]);
 
   const handleCreateWorkoutClick = async () => {
-    if (!newWorkoutName.trim()) return;
+    if (!newWorkoutName.trim() || createWorkoutMutation.isPending) return;
 
     try {
       const workout = await createWorkoutMutation.mutateAsync({
@@ -183,7 +206,7 @@ export function Dashboard({ onStartWorkout, onViewWorkout, onViewHistory }: Dash
         </div>
       </div>
 
-      {isCreating && (
+      {isCreating && isMobile && (
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] safe-pb">
           <AlphabetKeypad 
             onKeyPress={(key) => setNewWorkoutName(prev => prev + key)}

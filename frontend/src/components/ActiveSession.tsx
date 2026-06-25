@@ -21,6 +21,7 @@ interface ActiveSessionProps {
 
 export function ActiveSession({ userId, workout, onFinish }: ActiveSessionProps) {
   const [editingGroup, setEditingGroup] = useState<{ name: string; sets: Exercise[] } | null>(null);
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
   // Form State
   const [name, setName] = useState('');
@@ -75,8 +76,33 @@ export function ActiveSession({ userId, workout, onFinish }: ActiveSessionProps)
     }
   }, [exercises]);
 
+  // Handle physical keyboard input for desktop users
+  useEffect(() => {
+    if (!activeField) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if user is somehow focused on a real input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      if (e.key === 'Backspace') {
+        handleDelete();
+      } else if (e.key === 'Enter') {
+        if (activeField === 'sets' && (!sets || createExerciseMutation.isPending)) return;
+        if (activeField === 'weight' && !weight) return;
+        if (activeField === 'reps' && !reps) return;
+        if (activeField === 'name' && !name.trim()) return;
+        handleNext();
+      } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        handleKeyPress(e.key);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeField, name, weight, reps, sets, createExerciseMutation.isPending]);
+
   const handleSaveSet = async () => {
-    if (!name || !weight || !reps || !sets) return;
+    if (!name || !weight || !reps || !sets || createExerciseMutation.isPending) return;
 
     try {
       await createExerciseMutation.mutateAsync({
@@ -430,7 +456,7 @@ export function ActiveSession({ userId, workout, onFinish }: ActiveSessionProps)
         </div>
       </Modal>
 
-      {activeField && (
+      {activeField && isMobile && (
         <div className="sticky bottom-0 z-40 animate-in slide-in-from-bottom-4 duration-150 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
           {activeField === 'name' ? (
             <AlphabetKeypad 
