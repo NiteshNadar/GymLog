@@ -89,7 +89,7 @@ export function Dashboard({ onStartWorkout, onViewWorkout, onViewHistory }: Dash
               {format(new Date(), 'EEEE, MMMM d')}
             </p>
             <h1 className="text-[28px] font-bold text-text-primary leading-tight">
-              Gym Log
+              GYM LOGS
             </h1>
           </div>
           <button 
@@ -113,7 +113,7 @@ export function Dashboard({ onStartWorkout, onViewWorkout, onViewHistory }: Dash
                 size="lg"
               >
                 <Plus size={18} className="mr-2" strokeWidth={2.5} />
-                Start session
+                START SESSION
               </Button>
               {sessionsThisWeek > 0 && (
                 <p className="text-center text-[12px] text-text-secondary">
